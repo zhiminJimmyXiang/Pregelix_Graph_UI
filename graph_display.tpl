@@ -128,6 +128,13 @@
     #leftIndex{
       margin-left: 15px;
     }
+
+    #headerLine{
+      float:left;
+    }
+    #logIn{
+      float:left;
+    }
   </style>
   
   <title>Large Graph Analysis</title>
@@ -135,7 +142,23 @@
 <body>
   <div id="main" style="float:left">
     <div id="header" style="float:left">
-      <p id="headerContent">Social Graph Analysis and Visualization</p>
+      <div id="headerLine">
+        <p id="headerContent">Social Graph Analysis and Visualization</p>
+      </div>
+      <div id="logIn">
+        <form>
+          <table>
+            <tr>
+              <td><p>User ID</p></td>
+              <td><p>Password</p><td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+        </form>
+      </div>
     </div>
     <ul id="indexMenu">
       <li class="indexItems" id="leftIndex">
@@ -158,14 +181,8 @@
       </div>
     </div>
     <div id="controlBlock" style="float:left">
+
       <div id = "accordion">
-        <h3 class="controlBlockTitle">Load Graph</h3>
-        <div>
-          <p style="margin-bottom:3px">Choose your graph file:</p>
-          <form enctype="multipart/form-data" action="/upload" method="POST" target="iframeName1">
-            <input id="filePath" type="file" name="upload"/>
-          </form>
-        </div>
         <h3 class="controlBlockTitle">Connection Tracing</h3>
         <div>
           <p class="controlBlockContent">Show Your Connection!</p>
