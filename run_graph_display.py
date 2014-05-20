@@ -75,5 +75,5 @@ def run_asterix_update():
     return (build_response("update", dict(request.query)))
 
     
-res = bootstrap.bootstrap()
+# res = bootstrap.bootstrap()
 run(host='localhost', port=8081, debug=True)

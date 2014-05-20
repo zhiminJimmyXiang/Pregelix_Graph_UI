@@ -6,7 +6,7 @@
   <script type="text/javascript" src="static/js/jquery-ui/js/jquery-1.10.2.js"></script>
   <script type="text/javascript" src="static/js/jquery-ui/js/jquery-ui-1.10.4.custom.js"></script>
   <script type="text/javascript" src="static/js/asterix-sdk-stable.js"></script>
-  <script type="text/javascript" src="static/js/graphDisplay.js"></script>
+  <script type="text/javascript" src="static/js/graphDisplayOffline.js"></script>
   <script type="text/javascript" src="static/js/arbor.js"></script>
   <script type="text/javascript" src="static/js/arbor-graphics.js"></script>
   <script type="text/javascript" src="static/js/arbor-tween.js"></script>
