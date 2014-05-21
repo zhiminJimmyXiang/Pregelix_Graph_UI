@@ -203,7 +203,7 @@
             </tr>
           </table>
           <div id="logOut" style="float:left">
-            <p id="welcomeText"> Welcome Zhimin!</p>
+            <p id="welcomeText"> Welcome</p>
             <input type="submit" id="logOutButton" value="Log Out" ></input>
           </div>
           

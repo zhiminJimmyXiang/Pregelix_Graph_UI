@@ -241,21 +241,40 @@ var allEdges = [];
 
 var logInStatus = false;
 
+var logInUserId;
 
+function clearColoredNodesAndEdges(){
+	coloredNodes = [];
+	coloredEdges = [];
+	labelNodeIDTable = {};
+}
+
+
+function initializeRender(){
+	sys = arbor.ParticleSystem(3500, 50, 0.5);
+    sys.parameters({gravity:true});
+    sys.renderer = Renderer('#graph');
+}
+
+function initializeVariables(){
+	logInUserId = "";
+}
 
 function checkAndLoadGraph(){
 	var status = $('#iframeID1').contents().find('#returnResult').html();
+	//alert(status);
 	if(parseInt(status)!=1){
-		alert(status);
-		alert('User ID or Password is not correct!');
+		//alert('User ID or Password is not correct!');
 		logInStatus = false;
 	}
 	else{
-
+		var username = $('#iframeID1').contents().find('#returnLabel').html();
+		//alert(username);
+		$('#welcomeText').html('Welcome '+username+'!');
 		$('#logIn').hide();
 		$('#logOut').show();
 		logInStatus = true;
-		//loadGraph();
+		loadGraph();
 	}
 }
 
@@ -264,13 +283,126 @@ function logOut(){
 	$('#logOut').hide();
 	$('#logIn').show();
 	logInStatus = false;
-	//deleteAllNodesAndEdges();
+	deleteAllNodesAndEdges();
 
 }
 
+/*
+delete all nodes and edges in the graph
+*/
+function deleteAllNodesAndEdges(){
+	//alert("delete");
+	for(var i=0; i<allEdges.length; ++i){
+		var nodeArray = allEdges[i].split("||");
+		var sourceNode = nodeArray[0];
+		var targetNode = nodeArray[1];
+		var edgeArray = sys.getEdges(sourceNode, targetNode);
+		sys.pruneEdge(edgeArray[0]);
+	}
+	for(var i=0; i<allNodes.length; ++i){
+		var node = sys.getNode(allNodes[i]);
+		sys.pruneNode(node);
+	}
+	//alert(allEdges.length);
+	//alert(allNodes.length);
+	allEdges = [];
+	allNodes = [];
+}
+
+/*
+change the color of nodes and edges to default color
+*/
+function clearNodeEdgeColor(){
+
+    for(var i=0; i<coloredNodes.length; ++i){
+		coloredNodes[i].data.color= defaultNodeColor;
+    }
+    coloredNodes = [];
+    
+    for (var i=0; i<coloredEdges.length; ++i){
+		var sourceNode = coloredEdges[i].source;
+		var targetNode = coloredEdges[i].target;
+		sys.pruneEdge(coloredEdges[i]);
+		sys.addEdge(sourceNode, targetNode, {directed:false, color:defaultEdgeColor});
+
+
+    }
+    coloredEdges = [];
+
+    //flush
+    for (var i=0; i<10; ++i){
+	    sys.addNode("-1", {label:"-1", color:"#FFFFFF"});
+	    sys.addNode("-2", {label:"-2", color:"#FFFFFF"});
+	    sys.addEdge("-1", "-2", {directed:false, color:"#FFFFFF"})
+	    var edgeArray = sys.getEdges("-1","-2");
+	    sys.pruneEdge(edgeArray[0]);   
+	    var tempNode = sys.getNode("-1");
+	    sys.pruneNode(tempNode);
+	    tempNode = sys.getNode("-2");
+	    sys.pruneNode(tempNode);
+	}
+}
+
+
+/*
+draw the graph
+*/
+function drawGraph(dom, res){
+    
+    deleteAllNodesAndEdges();
+    var nodeSet = {};
+    for(i in res){
+		//alert(res[i]);
+		var resJson = eval('('+res[i]+')');
+		var sourceNode = resJson.source_node.int32.toString();
+		var targetNodeArray = resJson.target_nodes.orderedlist;
+
+
+		//alert("sourceNode:"+sourceNode);
+		var label=resJson.label;
+		labelNodeIDTable[label]=sourceNode;
+		//alert(label);
+		sys.addNode(sourceNode, {label:label, color:defaultNodeColor});
+		allNodes.push(sourceNode);
+		nodeSet[sourceNode] = true;
+
+		for(var i=0; i<targetNodeArray.length; ++i){
+		    var targetNode = targetNodeArray[i].int32.toString();
+		    if(!nodeSet[targetNode]==true){
+		    	sys.addEdge(sourceNode, targetNode, {directed:false, color:defaultEdgeColor});
+		    	allEdges.push(sourceNode+"||"+targetNode);
+		    }
+		}
+    }
+}
+
+function loadGraph(){
+
+	clearColoredNodesAndEdges();
+	
+	//get nodes, and draw graph
+    $('#tips').html("");
+	var A = new AsterixDBConnection().dataverse("Graph");
+	var whereClauseStr = '$node.login_user_id='+logInUserId;
+	var expression0a = new FLWOGRExpression()
+	.ForClause("$node", new AExpression("dataset DisplayGraph"))
+	.WhereClause(new AExpression(whereClauseStr))
+	.ReturnClause("$node");
+	
+	var success = function(res){
+		drawGraph('#graph', res["results"]);
+	}
+	A.query(expression0a.val(),  success);
+		
+}
+
+
+
 $(document).ready(function(){
 
-    //initializeRender();
+    initializeRender();
+
+    initializeVariables();
 
     //$("#filePath").change(uploadFile);
 
@@ -287,6 +419,7 @@ $(document).ready(function(){
     $('#accordion').accordion();
 
     $('#logInButton').click(function(){
+    	logInUserId = $('#user_id').val();
     	$('form').submit();
     });
 

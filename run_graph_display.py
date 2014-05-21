@@ -2,6 +2,7 @@
 import requests
 import os
 from bottle import route, run, template, get, debug, static_file, request, response
+import json
 
 
 debug(True)
@@ -60,8 +61,8 @@ def run_log_in():
     user_id = request.forms.get('user_id');
     password = request.forms.get('password');
     #print password;
-    # print user_id+','+password
-    query_statement = 'use dataverse Account; for $n in dataset AccountInfo where $n.user_id='+str(user_id)+' return $n.password';
+    #print user_id+','+password
+    query_statement = 'use dataverse Account; for $n in dataset AccountInfo where $n.user_id='+str(user_id)+' return $n';
     query = {
         'query': query_statement
     };
@@ -71,13 +72,21 @@ def run_log_in():
     query_url = "http://" + asterix_host + ":" + str(asterix_port) + "/query"
     try:
         response = requests.get(query_url, params=query, headers=http_header)
-        correctPassword = response.json()["results"][0].rstrip().replace('"', '');
+        result = str(response.json()["results"][0]);
+        # print result;
+        resultArray = result.split(', ');
+        resultLabel = resultArray[1];
+        resultPassword = resultArray[2];
+        labelArray = resultLabel.split(':');
+        label = labelArray[1].replace('"', '').strip();
+        passwordArray = resultPassword.split(':');
+        correctPassword = passwordArray[1].replace('"', '').replace('}', '').strip();
         
         if(password==correctPassword):
             print "correct"
-            return '<p id="returnResult">1</p>'
+            return '<p id="returnResult">1</p><p id="returnLabel">'+ label +'</p>'
         else:
-            print "error"
+            print "error"  
             return '<p id="returnResult">0</p>'
     except (ConnectionError, HTTPError):
         print "Encountered connection error; stopping execution"
