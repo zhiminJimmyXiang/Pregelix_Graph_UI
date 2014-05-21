@@ -23,7 +23,7 @@
     //border-style:solid;
     //border-width:1px;
     width: 101.5%;
-    height: 15%;
+    height: 80px;
     //margin-top: 2%;
     font-size: 30px;
     font-weight: bold;
@@ -38,9 +38,10 @@
     #headerContent{
       margin-bottom: 10px;
       margin-top: 20px;
-      margin-left: 3%;
+      margin-left: 7%;
       color: #17265a; 
       text-align: left;
+      width: 100%;
     }
    
 
@@ -133,7 +134,20 @@
       float:left;
     }
     #logIn{
-      float:left;
+      float:right;
+    }
+
+    .nodeText{
+      margin-top: 2px;
+      margin-bottom: 2px;
+      font-size: 15px;
+      height: 20px;
+      color: #969696;
+    }
+    
+    table{
+      margin-top: 15px;
+      margin-right: 34px;
     }
   </style>
   
@@ -146,15 +160,22 @@
         <p id="headerContent">Social Graph Analysis and Visualization</p>
       </div>
       <div id="logIn">
-        <form>
+        <form action="/logIn" method="POST" target="iframeLogIn">
           <table>
             <tr>
-              <td><p>User ID</p></td>
-              <td><p>Password</p><td>
+              <td><p class="nodeText">User ID</p></td>
+              <td><p class="nodeText">Password</p><td>
             </tr>
             <tr>
-              <td></td>
-              <td></td>
+              <td>
+                <input type="text" name="user_id" id="user_id" style="width: 150px"></input>
+              </td>
+              <td>
+                <input type="password" name="password" id="password" style="width: 150px"></input>
+              </td>
+              <td>
+                <input type="submit" id="logInButton" value="Log In" style="color:#7B7B7B"></input>
+              </td>
             </tr>
           </table>
         </form>
@@ -221,7 +242,7 @@
       </div>
     </div>
   </div>
-  <iframe name="iframeName1" id="iframeID1" src="" width="0" height="0"
+  <iframe name="iframeLogIn" id="iframeID1" src="" width="0" height="0"
   frameborder="0" />
 </body>
 </html>
