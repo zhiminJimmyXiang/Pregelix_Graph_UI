@@ -1,4 +1,4 @@
-import bootstrap
+# import bootstrap
 import requests
 import os
 from bottle import route, run, template, get, debug, static_file, request, response
@@ -59,6 +59,8 @@ def run_log_in():
     asterix_port = 19002
     user_id = request.forms.get('user_id');
     password = request.forms.get('password');
+    #print password;
+    # print user_id+','+password
     query_statement = 'use dataverse Account; for $n in dataset AccountInfo where $n.user_id='+str(user_id)+' return $n.password';
     query = {
         'query': query_statement
@@ -68,13 +70,21 @@ def run_log_in():
     }
     query_url = "http://" + asterix_host + ":" + str(asterix_port) + "/query"
     try:
-        response = requests.get(query_url, params=load, headers=http_header)
-        print response
+        response = requests.get(query_url, params=query, headers=http_header)
+        correctPassword = response.json()["results"][0].rstrip().replace('"', '');
+        
+        if(password==correctPassword):
+            print "correct"
+            return '<p id="returnResult">1</p>'
+        else:
+            print "error"
+            return '<p id="returnResult">0</p>'
     except (ConnectionError, HTTPError):
         print "Encountered connection error; stopping execution"
         sys.exit(1)
 
     return True
+
 # API Endpoints   
 @route('/query')
 def run_asterix_query():

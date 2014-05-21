@@ -133,7 +133,7 @@
     #headerLine{
       float:left;
     }
-    #logIn{
+    #logInOut{
       float:right;
     }
 
@@ -149,6 +149,28 @@
       margin-top: 15px;
       margin-right: 34px;
     }
+
+    #welcomeText{
+      margin-top: 2px;
+      margin-bottom: 2px;
+      font-size: 15px;
+      height: 20px;
+      color: #969696;
+      float:left;
+    }
+
+    #logOut{
+      margin-top: 40px;
+      margin-right: 150px;
+    }
+
+    #logOutButton{
+      color: #7B7B7B;
+      margin-top: 8px;
+      margin-left: 10px;
+      float: left;
+    }
+
   </style>
   
   <title>Large Graph Analysis</title>
@@ -159,28 +181,37 @@
       <div id="headerLine">
         <p id="headerContent">Social Graph Analysis and Visualization</p>
       </div>
-      <div id="logIn">
-        <form action="/logIn" method="POST" target="iframeLogIn">
-          <table>
+      <div id="logInOut" >
+          
+          <table id="logIn">
             <tr>
               <td><p class="nodeText">User ID</p></td>
               <td><p class="nodeText">Password</p><td>
             </tr>
             <tr>
+              <form action="/logIn" method="POST" target="iframeLogIn">
               <td>
-                <input type="text" name="user_id" id="user_id" style="width: 150px"></input>
+                  <input type="text" name="user_id" id="user_id" style="width: 150px"></input>
               </td>
               <td>
                 <input type="password" name="password" id="password" style="width: 150px"></input>
               </td>
+              </form>
               <td>
                 <input type="submit" id="logInButton" value="Log In" style="color:#7B7B7B"></input>
               </td>
             </tr>
           </table>
-        </form>
+          <div id="logOut" style="float:left">
+            <p id="welcomeText"> Welcome Zhimin!</p>
+            <input type="submit" id="logOutButton" value="Log Out" ></input>
+          </div>
+          
       </div>
+
     </div>
+  
+
     <ul id="indexMenu">
       <li class="indexItems" id="leftIndex">
         <a href="#" style="text-decoration:none">Introduction</a>
@@ -238,11 +269,10 @@
           <input id="task3_num_iteration" class="task1Text" name="task3_num_iteration" type="text"/>
           </br>
           <button class="button" id="runTask3" type="submit">Run</button>
-          </div>
+        </div>
       </div>
     </div>
   </div>
-  <iframe name="iframeLogIn" id="iframeID1" src="" width="0" height="0"
-  frameborder="0" />
+  <iframe name="iframeLogIn" id="iframeID1" src="" width="0" height="0" frameborder="0" />
 </body>
 </html>

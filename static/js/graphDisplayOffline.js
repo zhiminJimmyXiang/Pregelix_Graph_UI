@@ -206,6 +206,67 @@ var Renderer = function(canvas){
     return that
 }
 
+//var pathGraph = "/Users/liqiangw/Documents/workspace/Pregelix_Social_Graph/WebUI/graphFile/adm/";
+
+var pathGraph = "/home/zhimin/study/CS295/display/src/main/resources/graph-display-arborjs/graphFiles/";
+
+var sys;
+
+var fileName;
+
+
+var colorArray=["#CA7A2C", "#E03C8A", "#42AA5D", "#DB4D6D", "#64363C","#D0104C","#E2943B","#77428D","#E87A90","#787878"];
+
+var numColor = colorArray.length;
+
+var timeOut = 1300;
+
+var labelNodeIDTable = {};
+
+var preSourceNode = "0";
+
+var preIterNum = "0";
+
+var coloredNodes = [];
+
+var coloredEdges = [];
+
+var defaultNodeColor = "#4F726C";
+
+var defaultEdgeColor = "#535953";
+
+var allNodes = [];
+
+var allEdges = [];
+
+var logInStatus = false;
+
+
+
+function checkAndLoadGraph(){
+	var status = $('#iframeID1').contents().find('#returnResult').html();
+	if(parseInt(status)!=1){
+		alert(status);
+		alert('User ID or Password is not correct!');
+		logInStatus = false;
+	}
+	else{
+
+		$('#logIn').hide();
+		$('#logOut').show();
+		logInStatus = true;
+		//loadGraph();
+	}
+}
+
+function logOut(){
+
+	$('#logOut').hide();
+	$('#logIn').show();
+	logInStatus = false;
+	//deleteAllNodesAndEdges();
+
+}
 
 $(document).ready(function(){
 
@@ -221,7 +282,17 @@ $(document).ready(function(){
 
     //$('#runTask3').click(runTask3);
 
+    $("#logOut").hide();
+
     $('#accordion').accordion();
 
-    
+    $('#logInButton').click(function(){
+    	$('form').submit();
+    });
+
+    $('#logOutButton').click(logOut);
+
+    $('#iframeID1').load(checkAndLoadGraph);
+
+
 });
