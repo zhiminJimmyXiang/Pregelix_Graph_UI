@@ -423,6 +423,18 @@ function loadGraph(){
 		//use Ajax to load data 
 		xmlhttp1.open("GET", "http://localhost:19002/update?statements="+queryUpdate);
 		xmlhttp1.send();
+		xmlhttp1.onreadystatechange=function(){
+			//get nodes, and draw graph
+		    $('#tips').html("");
+    		var A = new AsterixDBConnection().dataverse("OriginalGraph");
+    		var expression0a = new FLWOGRExpression()
+			.ForClause("$node", new AExpression("dataset Graph"))
+			.ReturnClause("$node");
+			var success = function(res){
+				drawGraph('#graph', res["results"]);
+			}
+			A.query(expression0a.val(),  success);
+		}
     }
 }
 
@@ -614,6 +626,7 @@ function drawGraphTask2(nodeID){
     connectorGetCommID.query(expressionGetCommID.val(), successGetCommID);
 }
 
+
 function runTask2(){
 
     
@@ -632,7 +645,7 @@ function runTask2(){
 	.ForClause("$node", new AExpression("dataset Protocol"))
 	.ReturnClause("$node");
     var successGetProtocol = function(resProtocolTemp){
-	//alert("OK");
+	
 		var resProtocol = resProtocolTemp["results"];
 		for(k in resProtocol){
 		    //get value of Protocol
@@ -671,7 +684,6 @@ function runTask2(){
 			        	var res=resTemp["results"];
 			        	for(i in res){
 				    		var resJson = eval('('+res[i]+')');
-				    		//alert(resJson.task2_status.int32);
 				    		if(resJson.task2_status.int32!=2){
 				        		$('#graphDiplayStatus').html('Graph Display: <span style="color:#DB4D6D">Processing!</span>');
 				        		setTimeout(function(){ c.query(e.val(), s);}, timeOut);
@@ -692,6 +704,8 @@ function runTask2(){
     }
     connector.query(expressionGetProtocol.val(), successGetProtocol);
 }
+
+
 
 function drawGraphTask3(nodeID, inputFriendNum){
     var connTask3 = new AsterixDBConnection().dataverse("Tasks");
